@@ -5,65 +5,61 @@ import java.util.Scanner;
 
 import static java.lang.System.*;
 
-public class Main {
+public class Main implements Cloneable {
 
-    private int[] num;
-    private HashMap<Integer, Integer> hashtable;
-    private int gcd(int x, int y) {
-        if (x == 0)
-            return y;
-        return this.gcd(y % x, x);
+    public String getS1() {
+        return s1;
     }
 
-    public void readData() throws IOException {
+    public void setS1(String s1) {
+        this.s1 = s1;
+    }
+
+    private String s1, s2;
+
+    public int getZzz() {
+        return zzz;
+    }
+
+    private final int zzz = 123;
+
+    public Main() {}
+
+    public void readData() {
         Scanner input = new Scanner(in);
         int n = input.nextInt();
-        num = new int[n];
-        hashtable = new HashMap<>();
-        String s = new String();
-        int[] cnt = new int[26];
-        for (int i = 0; i < n; ++i) {
-            s = input.next();
-            for (int j = 0; j < 26; ++j)
-                cnt[j] = 0;
-            for (int j = 0; j < s.length(); ++j) {
-                cnt[s.charAt(j) - 'a'] ^= 1;
-            }
-            num[i] = 0;
-            for (int j = 0; j < 26; ++j)
-                if (cnt[j] > 0)
-                    num[i] |= (1 << j);
-        }
+        s1 = input.next();
+        s2 = input.next();
     }
 
-    private int getHashCnt(int x) {
-        if (hashtable.containsKey(x))
-            return hashtable.get(x);
-        return 0;
-    }
-
-    private void putHashKey(int x) {
-        if (hashtable.containsKey(x))
-            hashtable.replace(x, hashtable.get(x) + 1);
-        else
-            hashtable.put(x, 1);
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public void solveProblem() {
-        long sum = 0;
-        for (int i = 0; i < num.length; ++i) {
-            sum += getHashCnt(num[i]);
-            for (int j = 0; j < 26; ++j) {
-                sum += getHashCnt(num[i] ^ (1 << j));
+        int sum = 0;
+        for (int i = 0; i < s1.length(); ++i) {
+            if (s1.charAt(i) != s2.charAt(i)) {
+                if (i + 1 < s1.length()) {
+                    if (s1.charAt(i + 1) != s2.charAt(i + 1) && s1.charAt(i) == s2.charAt(i + 1)) {
+                        i += 1;
+                    }
+                }
+                sum += 1;
             }
-            putHashKey(num[i]);
         }
         out.println(sum);
     }
 
-    public static void main(String[] args) throws  IOException {
+    public static void main(String[] args) throws CloneNotSupportedException {
         Main helper = new Main();
-        helper.readData();
-        helper.solveProblem();
+        helper.setS1("ABC");
+        Main helper2 = (Main) helper.clone();
+        helper2.setS1("AAA");
+        out.println(helper2.getS1());
+
+        //helper.readData();
+        //helper.solveProblem();
     }
 }
